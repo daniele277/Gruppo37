@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth 2.0 Authorization</title>
+</head>
+<body>
+    <h1>Autenticazione con OAuth 2.0</h1>
+    <p>Clicca sul pulsante qui sotto per autenticarti tramite il provider:</p>
+
+    <!-- Il link di autorizzazione generato dal server -->
+    <a href="/login_IDP" class="btn btn-primary">Accedi con OAuth</a>
+
+    <!-- Oppure, se hai un URL specifico, puoi scrivere direttamente: -->
+    <!--
+    <a href="https://provider.com/oauth/authorize?response_type=code&client_id=tuoClientID&redirect_uri=https%3A%2F%2FtuaApp.com%2Fcallback&scope=profile%20email&state=xyz123" class="btn btn-primary">
+        Accedi con OAuth
+    </a>
+    -->
+
+</body>
+</html>
