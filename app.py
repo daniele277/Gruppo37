@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template, session, flash
 import bcrypt
 
+import AccessToken
 from User import User, printData, insertUser, find_user_by_email
 from Client import Client, insertClient, get_authorization_url, exchange_code_for_token, get_token_url
 
@@ -117,6 +118,12 @@ def token():
 def privacy():
     return render_template('privacy.html')
 
+@app.route('/accesso_risorsa')
+def accesso_risorsa():
+    code=request.args.get('code')
+    access_token_validato = AccessToken.validate_jwt(exchange_code_for_token(client1,code), AccessToken.public_key)
+
+    return render_template(accesso_risorsa.html)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
