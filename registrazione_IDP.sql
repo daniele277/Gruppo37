@@ -38,8 +38,8 @@ create table AccessToken (
 );
 
 create table AuthorizationCode (
-    codeID integer primary key autoincrement,
-    tokenExpiryDate DATETIME,
+    code text primary key,
+    codeExpiryDate DATETIME,
     clientID integer,
     userID integer
 );

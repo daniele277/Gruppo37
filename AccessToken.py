@@ -49,19 +49,18 @@ def save_public_key(public_key, filename):
     with open(filename, 'wb') as f:
         f.write(pem)
 
-# Genera una coppia di chiavi RSA
-private_key, public_key = generate_rsa_keypair()
+def load_encrypted_private_key(filename, password):
+    """
+    Carica una chiave privata crittografata da un file PEM.
+    """
+    with open(filename, 'rb') as f:
+        private_key = serialization.load_pem_private_key(
+            f.read(),
+            password=password.encode('utf-8'),
+            backend=default_backend()
+        )
+    return private_key
 
-# Definisci una password per crittografare la chiave privata
-password = 'prova'
-
-# Salva la chiave privata crittografata
-save_encrypted_private_key(private_key, "encrypted_private_key.pem", password)
-
-# Salva la chiave pubblica
-save_public_key(public_key, "public_key.pem")
-
-print("Chiave privata crittografata e chiave pubblica salvate su file.")
 
 def load_public_key(filename):
     """
@@ -74,7 +73,22 @@ def load_public_key(filename):
         )
     return public_key
 
-public_key = load_public_key("public_key.pem")
+password = 'prova'
+private_key_file = "encrypted_private_key.pem"
+public_key_file = "public_key.pem"
+
+# Controlla se le chiavi esistono già
+if not (os.path.exists(private_key_file) and os.path.exists(public_key_file)):
+    # Genera e salva una nuova coppia di chiavi
+    private_key, public_key = generate_rsa_keypair()
+    save_encrypted_private_key(private_key, private_key_file, password)
+    save_public_key(public_key, public_key_file)
+else:
+    # Carica le chiavi già esistenti dai file
+    private_key = load_encrypted_private_key(private_key_file, password)
+    public_key = load_public_key(public_key_file)
+
+print("Chiave privata crittografata",private_key," e chiave pubblica", public_key)
 
 def validate_jwt(token, public_key):
         """

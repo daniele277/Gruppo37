@@ -94,6 +94,10 @@ def autorizza():
     callback_url = f"{client1.redirectURI}?code={code}"
     return render_template('autorizza.html',callback_url=callback_url)
 
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
 @app.route('/callback') # rotta che viene dopo il tasto autorizza presente nell'authorization URL
 def callback():
     code = request.args.get('code')
@@ -113,10 +117,6 @@ def token():
     access_token = exchange_code_for_token(client1, code)
 
     return render_template('token.html', access_token=access_token)
-
-@app.route('/privacy')
-def privacy():
-    return render_template('privacy.html')
 
 @app.route('/accesso_risorsa')
 def accesso_risorsa():

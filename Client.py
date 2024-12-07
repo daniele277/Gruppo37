@@ -1,5 +1,4 @@
 import sqlite3
-from contextlib import nullcontext
 from urllib.parse import urlencode
 import jwt
 from cryptography.hazmat.backends import default_backend
@@ -8,7 +7,7 @@ from flask import redirect, url_for
 import requests
 from datetime import datetime, timedelta
 
-from AccessToken import password
+from AccessToken import password, load_encrypted_private_key
 
 
 class Client:
@@ -41,7 +40,7 @@ def insertClient(client):
 
         except sqlite3.Error as e:
             return f"Errore nel database: {e}"
-        return nullcontext
+        return None
 
 
 def get_authorization_url(self):
@@ -50,21 +49,6 @@ def get_authorization_url(self):
 def get_token_url(self, code):
     return f"{self.tokenEndpoint}?grant_type=authorization_code&code={code}&redirect_uri={self.redirectURI}&client_id={self.clientID}&client_secret={self.clientSecret}"
 
-def load_encrypted_private_key(filename, password):
-    """
-    Carica una chiave privata crittografata da un file PEM e la decrittografa con la password fornita.
-    """
-    with open(filename, "rb") as f:
-        encrypted_private_key = f.read()
-
-    # Decodifica e decrittografa la chiave privata utilizzando la password
-    private_key = serialization.load_pem_private_key(
-        encrypted_private_key,
-        password=password.encode('utf-8'),  # La password deve essere codificata in bytes
-        backend=default_backend()
-    )
-
-    return private_key
 
 # Carica la chiave privata crittografata
 private_key_loaded = load_encrypted_private_key("encrypted_private_key.pem", password)
@@ -86,11 +70,6 @@ def exchange_code_for_token(self, code):
     token = jwt.encode(payload, private_key_loaded , algorithm='RS256')
 
     return token
-
-
-
-
-
 
 def refresh_token(self, refresh_token):
     """
