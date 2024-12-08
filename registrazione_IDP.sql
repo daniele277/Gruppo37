@@ -18,11 +18,9 @@ create table User (
 create table Client (
     clientID integer primary key autoincrement,
     name text,
-    clientSecret text,
     redirectURI text,
     grantType text,
     scope text,
-    tokenExpiryDate DATETIME,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     authEndpoint text,

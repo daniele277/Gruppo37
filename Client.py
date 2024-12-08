@@ -14,15 +14,13 @@ class Client:
 
     _next_id = 1
 
-    def __init__(self, name, clientSecret, redirectURI, authEndpoint, tokenEndpoint):
+    def __init__(self, name, redirectURI, authEndpoint, tokenEndpoint):
         self.clientID = Client._next_id
         Client._next_id += 1
         self.name = name
-        self.clientSecret = clientSecret
         self.redirectURI = redirectURI
         self.grantType = 'code'
         self.scope = 'profile'
-        self.tokenExpiryDate = (datetime.now() + timedelta(seconds=20)).strftime('%Y-%m-%d %H:%M:%S')
         self.authEndpoint = authEndpoint
         self.tokenEndpoint = tokenEndpoint
 
@@ -31,9 +29,9 @@ def insertClient(client):
             with sqlite3.connect('database.db') as connection:
                 cursor = connection.cursor()
                 cursor.execute('''
-                   INSERT INTO Client (clientID, name, grantType, scope, tokenExpiryDate, clientSecret, redirectURI, authEndpoint, tokenEndpoint)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                   ''', (client.clientID, client.name, client.grantType, client.scope, client.tokenExpiryDate, client.clientSecret, client.redirectURI, client.authEndpoint, client.tokenEndpoint))
+                   INSERT INTO Client (clientID, name, grantType, scope, redirectURI, authEndpoint, tokenEndpoint)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)
+                   ''', (client.clientID, client.name, client.grantType, client.scope, client.redirectURI, client.authEndpoint, client.tokenEndpoint))
                 connection.commit()
 
                 print("Dati client inseriti nel database con successo!")
