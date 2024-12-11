@@ -1,7 +1,8 @@
 from flask import Flask, request, redirect, url_for, render_template, session, flash
 import requests
 
-from Client import Client, get_authorization_url, insertClient
+import AccessToken
+from Client import Client, get_authorization_url, insertClient, exchange_code_for_token
 
 app = Flask(__name__)
 
@@ -19,18 +20,27 @@ def index():
     print('authorization_url:', authorization_url)
     return render_template('homepage_sito.html',authorization_url=authorization_url)
 
-
 @app.route('/callback') # rotta che viene dopo il tasto autorizza presente nell'authorization URL
 def callback():
     code = request.args.get('code')
 
-    token_url = url_for('token', grant_type='authorization_code', code=code, redirect_uri=example_client.redirectURI, client_id=example_client.clientID, )
+    token_url = (f"{example_client.tokenEndpoint}?grant_type=authorization_code&code={code}&redirect_uri={example_client.redirectURI}"
+                 f"&client_id={example_client.clientID}")
     print('token_url:', token_url)
 
     if code:
         # Reindirizza alla pagina del token con il codice
         return redirect(token_url)
     return "Errore: codice di autorizzazione non trovato", 400
+
+@app.route('/accesso_risorsa')
+def accesso_risorsa():
+    code=request.args.get('code')
+    access_token_validato = AccessToken.validate_jwt(exchange_code_for_token(example_client,code), AccessToken.public_key)
+
+    return render_template(accesso_risorsa.html)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)

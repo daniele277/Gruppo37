@@ -90,6 +90,7 @@ else:
 
 print("Chiave privata crittografata",private_key," e chiave pubblica", public_key)
 
+
 def validate_jwt(token, public_key):
         """
         Valida un JWT usando la chiave pubblica.

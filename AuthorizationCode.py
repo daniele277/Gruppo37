@@ -5,13 +5,13 @@ from datetime import datetime, timedelta
 
 class AuthorizationCode:
     def __init__(self, clientID, userID):
-        self.code = secrets.token_urlsafe(16)
+        self.code = secrets.token_urlsafe(16) #Genera un token casuale sicuro codificato in base64
         self.clientID = clientID
         self.userID = userID
-        self.tokenExpiryDate = datetime.utcnow() + timedelta(minutes=10)  # Scadenza in 10 minuti
+        self.tokenExpiryDate = datetime.utcnow() + timedelta(minutes=1)  # Scadenza in 1 minut0
 
 def store_authorization_code(self, clientID, userID):
-    expires_at = datetime.utcnow() + timedelta(minutes=10)  # Codice valido per 10 minuti
+    expires_at = datetime.utcnow() + timedelta(minutes=1)  # Codice valido per 1 minuto
 
     try:
         with sqlite3.connect('database.db') as connection:
@@ -29,7 +29,7 @@ def store_authorization_code(self, clientID, userID):
     return None
 
 def generate_authorization_code(clientID, userID):
-    code = secrets.token_urlsafe(32)
+    code = AuthorizationCode(clientID, userID)
     store_authorization_code(code, clientID, userID)
 
     return code

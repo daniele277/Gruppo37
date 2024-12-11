@@ -50,8 +50,12 @@ def registrazione_completata():
 
 @app.route('/authorize')
 def authorize(): #dopo il tasto "accesso riservato con IDP"
-    redirect_uri = request.args.get('redirect_uri')
-    session['redirect_uri'] = redirect_uri
+    session['redirect_uri'] = request.args.get('redirect_uri')
+    session['client_id'] = request.args.get('client_id')
+    session['state'] = request.args.get('state')
+    session['scope'] = request.args.get('scope')
+    session['response_type'] = request.args.get('response_type')
+
     return render_template('authorize.html')
 
 def validate_password(password):
@@ -106,16 +110,9 @@ def privacy():
 @app.route('/token')
 def token():
     code = request.args.get('code')
-    access_token = exchange_code_for_token(client1, code)
+    access_token = exchange_code_for_token(Client, code)
 
     return render_template('token.html', access_token=access_token)
-
-@app.route('/accesso_risorsa')
-def accesso_risorsa():
-    code=request.args.get('code')
-    access_token_validato = AccessToken.validate_jwt(exchange_code_for_token(client1,code), AccessToken.public_key)
-
-    return render_template(accesso_risorsa.html)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

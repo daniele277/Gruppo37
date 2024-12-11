@@ -24,6 +24,8 @@ class Client:
         self.authEndpoint = authEndpoint
         self.tokenEndpoint = tokenEndpoint
 
+#       self.insertClient()  -> modificare insertClient in modo che abbia come parametro solo self
+
 def insertClient(client):
         try:
             with sqlite3.connect('database.db') as connection:
@@ -61,7 +63,6 @@ def exchange_code_for_token(self, code):
         'code': code,
         'name': self.name,
         'scope': self.scope,
-        'client_secret': self.clientSecret,
         'exp': datetime.utcnow() + timedelta(minutes=5)  # Durata token 5 minuti
     }
 
@@ -85,3 +86,22 @@ def refresh_token(self, refresh_token):
         return token_info
     else:
         raise Exception(f"Errore nel refresh del token: {response.status_code} {response.text}")
+
+@staticmethod
+def getClientByID(clientID):
+    try:
+        with sqlite3.connect('database.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute('''
+               SELECT * FROM Client WHERE clientID = ?
+               ''', (clientID,))
+            result = cursor.fetchone()
+            if result:
+                print(f"Client trovato: {result}")
+                return result
+            else:
+                print("Client non trovato.")
+                return None
+
+    except sqlite3.Error as e:
+        raise Exception(f"Errore nel database: {e}")
