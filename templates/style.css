@@ -1,1 +1,57 @@
+/* Generale */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #2c2f33, #23272a); 
+    color: #d1d1d1; 
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #1c1e22 !important; 
+
+.navbar-brand, .nav-link {
+    color: #f5f5f5 !important; 
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+    color: #c0c0c0 !important; 
+}
+
+/* Bottone centrale */
+.btn-primary {
+    font-size: 20px;
+    padding: 15px 30px;
+    background-color: #5865F2; 
+    border: none;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #4854c4; 
+    transform: scale(1.1);
+}
+
+/* Contenitore centrale */
+.d-flex {
+    text-align: center;
+    background: #1f2023; 
+    padding: 40px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); 
+    border-radius: 10px;
+}
+
+/* Footer  */
+footer {
+    background-color: #1c1e22;
+    color: #d1d1d1;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
