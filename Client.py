@@ -50,25 +50,6 @@ def get_token_url(self, code):
     return f"{self.tokenEndpoint}?grant_type=authorization_code&code={code}&redirect_uri={self.redirectURI}&client_id={self.clientID}&client_secret={self.clientSecret}"
 
 
-# Carica la chiave privata crittografata
-private_key_loaded = load_encrypted_private_key("encrypted_private_key.pem", password)
-print("Chiave privata caricata e decrittografata con successo.")
-
-def exchange_code_for_token(self, code):
-
-    if not code:
-        raise ValueError("Il codice di autorizzazione non può essere vuoto.")
-    payload = {
-        'client_id': self.clientID,
-        'code': code,
-        'name': self.name,
-        'scope': self.scope,
-        'exp': datetime.utcnow() + timedelta(minutes=5)  # Durata token 5 minuti
-    }
-
-    token = jwt.encode(payload, private_key_loaded , algorithm='RS256')
-
-    return token
 
 def refresh_token(self, refresh_token):
     """

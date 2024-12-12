@@ -2,10 +2,9 @@ import re #Gestione delle regular expression nelle condizioni di inserimento del
 
 from flask import Flask, request, redirect, url_for, render_template, session, flash
 import bcrypt
-
-import AccessToken
+from AccessToken import generate_jwt
 from User import User, printData, insertUser, find_user_by_email
-from Client import Client, insertClient, get_authorization_url, exchange_code_for_token, get_token_url
+import AuthorizationCode
 
 app = Flask(__name__)
 
@@ -99,7 +98,8 @@ def login_IDP():
 
 @app.route('/autorizza')
 def autorizza():
-    code=12
+
+    code=AuthorizationCode.generate_authorization_code(session.get('client_id'),session.get('user_id'))
     callback_url = f"{session.get('redirect_uri')}?code={code}"
     return render_template('autorizza.html',callback_url=callback_url)
 
@@ -110,9 +110,12 @@ def privacy():
 @app.route('/token')
 def token():
     code = request.args.get('code')
-    access_token = exchange_code_for_token(Client, code)
+    access_token = generate_jwt(session.get('user_id'),session.get('client_id'), code)
 
-    return render_template('token.html', access_token=access_token)
+    accesso_url = (
+        f"{'accesso_risorsa.html'}?token={access_token}" )
+
+    return redirect(accesso_url)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

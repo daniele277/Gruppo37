@@ -90,7 +90,25 @@ else:
 
 print("Chiave privata crittografata",private_key," e chiave pubblica", public_key)
 
+# Carica la chiave privata crittografata
+private_key_loaded = load_encrypted_private_key("encrypted_private_key.pem", password)
+print("Chiave privata caricata e decrittografata con successo.")
 
+def generate_jwt(user_id,client_id, code):
+
+    if not code:
+        raise ValueError("Il codice di autorizzazione non può essere vuoto.")
+    payload = {
+
+            'user_id': user_id,
+            'client_id': client_id,
+             'code': code
+
+    }
+
+    token = jwt.encode(payload, private_key_loaded , algorithm='RS256')
+
+    return token
 def validate_jwt(token, public_key):
         """
         Valida un JWT usando la chiave pubblica.
