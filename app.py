@@ -98,8 +98,7 @@ def login_IDP():
 
 @app.route('/autorizza')
 def autorizza():
-
-    code=AuthorizationCode.generate_authorization_code(session.get('client_id'),session.get('user_id'))
+    code = AuthorizationCode.generate_authorization_code(session.get('client_id'),session.get('user_id'))
     callback_url = f"{session.get('redirect_uri')}?code={code}"
     return render_template('autorizza.html',callback_url=callback_url)
 
@@ -110,10 +109,12 @@ def privacy():
 @app.route('/token')
 def token():
     code = request.args.get('code')
+
+    AuthorizationCode.validate_authorization_code(code, session.get('client_id'))
+
     access_token = generate_jwt(session.get('user_id'),session.get('client_id'), code)
 
-    accesso_url = (
-        f"{'accesso_risorsa.html'}?token={access_token}" )
+    accesso_url = (f"{'http://localhost:5001/accesso_risorsa'}?token={access_token}" )
 
     return redirect(accesso_url)
 

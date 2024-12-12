@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, url_for, render_template, session, f
 import requests
 
 import AccessToken
+from AuthorizationCode import validate_authorization_code
 from Client import Client, get_authorization_url, insertClient
 
 app = Flask(__name__)
@@ -35,9 +36,11 @@ def callback():
 
 @app.route('/accesso_risorsa')
 def accesso_risorsa():
+    token =request.args.get('token')
+    AccessToken.validate_jwt(token, AccessToken.public_key)
+
+    return render_template('accesso_risorsa.html',user_name="Daniele")
 
 
-
-
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5001)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)
