@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template, session, flash
+from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import requests
 
 from AccessToken import validate_jwt, public_key, AccessToken
@@ -36,8 +36,14 @@ def callback():
 
 @app.route('/accesso_risorsa')
 def accesso_risorsa():
-    token =request.args.get('token')
-    payload = validate_jwt(token, public_key)
+
+    auth_header = request.headers.get('Authorization')
+    if auth_header and auth_header.startswith("Bearer "):
+        jwt_token = auth_header.split(" ")[1]
+    else:
+        return jsonify({"message": "Token JWT mancante o formato errato"}), 401
+
+    payload = validate_jwt(jwt_token, public_key)
     print(payload)
 
     return render_template('accesso_risorsa.html',user_name=payload.get('name'),email=payload.get('email'))

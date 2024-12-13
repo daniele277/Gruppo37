@@ -10,7 +10,7 @@ class AuthorizationCode:
         self.userID = userID
         self.tokenExpiryDate = datetime.utcnow() + timedelta(minutes=1)  # Scadenza in 1 minut0
 
-def store_authorization_code(self, clientID, userID):
+def store_authorization_code(self):
     expires_at = datetime.utcnow() + timedelta(minutes=1)  # Codice valido per 1 minuto
 
     try:
@@ -19,7 +19,7 @@ def store_authorization_code(self, clientID, userID):
             cursor.execute('''
                INSERT INTO AuthorizationCode (code, codeExpiryDate, clientID, userID)
                VALUES (?, ?, ?, ?)
-               ''', (self, expires_at, clientID, userID))
+               ''', (self, expires_at, self.clientID, self.userID))
             connection.commit()
 
             print("Dati code inseriti nel database con successo!")
@@ -28,9 +28,9 @@ def store_authorization_code(self, clientID, userID):
         return f"Errore nel database: {e}"
     return None
 
-def generate_authorization_code(clientID, userID):
+def generate_authorization_code(clientID, userID, ):
     code = AuthorizationCode(clientID, userID)
-    store_authorization_code(code, clientID, userID)
+    store_authorization_code(code)
 
     return code
 
