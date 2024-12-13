@@ -6,6 +6,9 @@ from cryptography.hazmat.primitives.hashes import SHA256
 import os
 import jwt
 
+from User import find_user_by_id
+
+
 def generate_rsa_keypair():
 
 # Genera la chiave privata RSA
@@ -96,19 +99,22 @@ print("Chiave privata caricata e decrittografata con successo.")
 
 def generate_jwt(user_id,client_id, code):
 
+    user = find_user_by_id(user_id)
+
     if not code:
         raise ValueError("Il codice di autorizzazione non può essere vuoto.")
     payload = {
-
-            'user_id': user_id,
+            'user_id': user.userID,
+            'name': user.name,
+            'email': user.email,
             'client_id': client_id,
              'code': code
-
     }
 
     token = jwt.encode(payload, private_key_loaded , algorithm='RS256')
 
     return token
+
 def validate_jwt(token, public_key):
         """
         Valida un JWT usando la chiave pubblica.
@@ -116,5 +122,6 @@ def validate_jwt(token, public_key):
         try:
             decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
             print("Token valido:", decoded_token)
+            return decoded_token
         except jwt.InvalidTokenError as e:
             print("Token non valido:", str(e))

@@ -71,3 +71,35 @@ def find_user_by_email(email):
     except sqlite3.Error as e:
         print(f"Errore nel database: {e}")
         return f"Errore nel database: {e}"
+
+def find_user_by_id(user_id):
+    try:
+        with sqlite3.connect('database.db') as connection:
+            cursor = connection.cursor()
+
+            # Cerca un utente che abbia la mail fornita
+            cursor.execute('SELECT * FROM User WHERE userID = ?', (user_id,))
+            user_data = cursor.fetchone()
+
+            if user_data:
+                # Crea e restituisce un'istanza di User utilizzando i dati ottenuti
+                user = User(
+                    name=user_data[1],
+                    surname=user_data[2],
+                    email=user_data[3],
+                    hashPassword=user_data[4].encode('utf-8'),  # Assicurati che sia in bytes
+                    address=user_data[5],
+                    city=user_data[6],
+                    state=user_data[7],
+                    zip=user_data[8]
+                )
+                user.userID = user_data[0]  # Assegna l'userID recuperato
+                User._next_id = max(user.userID + 1, User._next_id)  # Gestisci l'incremento di ID
+                return user
+            else:
+                print("Nessun utente trovato con questo id.")
+                return None
+
+    except sqlite3.Error as e:
+        print(f"Errore nel database: {e}")
+        return f"Errore nel database: {e}"

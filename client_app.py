@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template, session, flash
 import requests
 
-import AccessToken
+from AccessToken import validate_jwt, public_key, AccessToken
 from AuthorizationCode import validate_authorization_code
 from Client import Client, get_authorization_url, insertClient
 
@@ -37,10 +37,10 @@ def callback():
 @app.route('/accesso_risorsa')
 def accesso_risorsa():
     token =request.args.get('token')
-    AccessToken.validate_jwt(token, AccessToken.public_key)
+    payload = validate_jwt(token, public_key)
+    print(payload)
 
-    return render_template('accesso_risorsa.html',user_name="Daniele")
-
+    return render_template('accesso_risorsa.html',user_name=payload.get('name'),email=payload.get('email'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
