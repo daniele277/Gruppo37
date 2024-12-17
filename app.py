@@ -1,7 +1,6 @@
 import re #Gestione delle regular expression nelle condizioni di inserimento della password
 import string
 import random
-from tkinter.messagebox import RETRY
 import requests
 from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import bcrypt
