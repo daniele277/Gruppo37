@@ -38,6 +38,7 @@ def callback():
 def accesso_risorsa():
 
     auth_header = request.headers.get('Authorization')
+
     if auth_header and auth_header.startswith("Bearer "):
         jwt_token = auth_header.split(" ")[1]
     else:

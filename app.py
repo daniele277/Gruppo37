@@ -1,11 +1,12 @@
 import re #Gestione delle regular expression nelle condizioni di inserimento della password
+import string
+import random
 from tkinter.messagebox import RETRY
-
 import requests
 from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import bcrypt
-
-
+from flask_mail import Mail, Message
+import pyotp
 from AccessToken import generate_jwt
 from User import User, printData, insertUser, find_user_by_email
 from AuthorizationCode import generate_authorization_code, validate_authorization_code
@@ -14,6 +15,26 @@ app = Flask(__name__)
 
 app.secret_key = 'chiave_segreta_per_la_sessione'
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'idiot.proof44@gmail.com'  # Sostituisci con la tua email
+app.config['MAIL_PASSWORD'] = 'Idiot_proof44?'  # Sostituisci con la tua password o una password app-specifica
+
+mail = Mail(app)
+
+def generate_otp():
+    return ''.join(random.choices(string.digits, k=6))
+
+# Funzione per inviare OTP via email
+def send_otp_email(user_email, otp):
+    msg = Message("Il tuo OTP per l'autenticazione 2FA", sender="idiot.proof44@gmail.com", recipients=[user_email])
+    msg.body = f"Il tuo codice OTP è: {otp}"
+    try:
+        mail.send(msg)
+        print("OTP inviato via email!")
+    except Exception as e:
+        print(f"Errore nell'invio dell'email: {e}")
 @app.route('/')
 def index():
     return render_template('homepage_IDP.html')
@@ -92,14 +113,31 @@ def login_IDP():
             print('utente trovato')
             # Se l'utente esiste e la password è corretta
             session['user_id'] = user.userID  # Salva l'ID dell'utente nella sessione
-            return redirect(url_for('autorizza'))  # Reindirizza all'autorizzazione
+            return redirect(url_for('verifica_otp'))  # Reindirizza all'autorizzazione
 
         else:
             print('Email o password errati. Riprova.')
             flash('Email o password errati. Riprova.')
 
+        otp=generate_otp()
+        send_otp_email(email,otp)
+        session['otp']=otp
+
     return render_template('login_IDP.html')
 
+@app.route('/verifica_otp')
+def verifica_otp():
+
+    if request.method == 'POST':
+
+        otp=request.args.get('otp')
+
+    if otp==session.get('otp'):
+        return redirect(url_for('autorizza'))
+    else:
+        return redirect(url_for('login_IDP'))
+
+    return render_template('verifica_otp.html')
 @app.route('/autorizza')
 def autorizza():
     code = generate_authorization_code(session.get('client_id'),session.get('user_id'))
@@ -125,16 +163,18 @@ def token():
 
     response = requests.get("http://localhost:5001/accesso_risorsa", headers=headers)
 
+
     if response.status_code == 200:
 
         try:
             data=response.json()
+
             return data
         except ValueError:
 
             print("Decodifica JSON fallita")
-            return response.text
 
+            return response.text
 
     else:
         return jsonify({"Errore": f"Errore {response.status_code}: {response.text}"}), response.status_code
