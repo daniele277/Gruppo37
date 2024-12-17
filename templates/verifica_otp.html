@@ -7,7 +7,7 @@
 <body>
     <h2>Inserisci il codice OTP che hai ricevuto via email:</h2>
     <form method="POST">
-        <input type="text" name="otp" required>
+        <input type="text" name="otp" value="{{ request.form['otp'] }}" required>
         <button type="submit">Verifica OTP</button>
     </form>
 </body>

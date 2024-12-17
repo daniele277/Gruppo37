@@ -6,7 +6,6 @@ import requests
 from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import bcrypt
 from flask_mail import Mail, Message
-import pyotp
 from AccessToken import generate_jwt
 from User import User, printData, insertUser, find_user_by_email
 from AuthorizationCode import generate_authorization_code, validate_authorization_code
@@ -18,8 +17,9 @@ app.secret_key = 'chiave_segreta_per_la_sessione'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False  # Deve essere False se stai usando TLS
 app.config['MAIL_USERNAME'] = 'idiot.proof44@gmail.com'  # Sostituisci con la tua email
-app.config['MAIL_PASSWORD'] = 'Idiot_proof44?'  # Sostituisci con la tua password o una password app-specifica
+app.config['MAIL_PASSWORD'] = 'fuxs jeab hayh gwlq'  # Sostituisci con la tua password o una password app-specifica
 
 mail = Mail(app)
 
@@ -28,6 +28,7 @@ def generate_otp():
 
 # Funzione per inviare OTP via email
 def send_otp_email(user_email, otp):
+    print(user_email)
     msg = Message("Il tuo OTP per l'autenticazione 2FA", sender="idiot.proof44@gmail.com", recipients=[user_email])
     msg.body = f"Il tuo codice OTP è: {otp}"
     try:
@@ -112,30 +113,31 @@ def login_IDP():
         if user is not None and bcrypt.checkpw(password, user.hashPassword):
             print('utente trovato')
             # Se l'utente esiste e la password è corretta
-            session['user_id'] = user.userID  # Salva l'ID dell'utente nella sessione
+            session['user_id'] = user.userID # Salva l'ID dell'utente nella sessione
+            otp = generate_otp()
+            session['otp'] = otp
+            send_otp_email(email,otp)
+
             return redirect(url_for('verifica_otp'))  # Reindirizza all'autorizzazione
 
         else:
             print('Email o password errati. Riprova.')
             flash('Email o password errati. Riprova.')
 
-        otp=generate_otp()
-        send_otp_email(email,otp)
-        session['otp']=otp
-
     return render_template('login_IDP.html')
 
-@app.route('/verifica_otp')
+@app.route('/verifica_otp', methods=['GET', 'POST'])
 def verifica_otp():
 
     if request.method == 'POST':
 
-        otp=request.args.get('otp')
+        otp = request.form['otp']
+        print('otp: ',otp)
 
-    if otp==session.get('otp'):
-        return redirect(url_for('autorizza'))
-    else:
-        return redirect(url_for('login_IDP'))
+        if otp == session.get('otp'):
+            return redirect(url_for('autorizza'))
+        else:
+            return redirect(url_for('login_IDP'))
 
     return render_template('verifica_otp.html')
 @app.route('/autorizza')

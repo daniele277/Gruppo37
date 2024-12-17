@@ -16,6 +16,10 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Profilo</a>
             </li>
@@ -39,15 +43,34 @@
           <div class="col-md-4">
             <div class="card text-center">
               <div class="card-body">
+                <h5 class="card-title">Dashboard</h5>
+                <p class="card-text">Accedi al tuo pannello per visualizzare i dati principali.</p>
+                <a href="#" class="btn btn-primary">Vai</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center">
+              <div class="card-body">
                 <h5 class="card-title">Gestione Profilo</h5>
                 <p class="card-text">Modifica informazioni personali o preferenze.</p>
                 <a href="#" class="btn btn-primary">Modifica</a>
               </div>
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Esci dall'Account</h5>
+                <p class="card-text">Termina la sessione corrente in sicurezza.</p>
+                <a href="{{ logout_url }}" class="btn btn-danger">Logout</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-gUjP3yHtSWqaBTm+CB8KfiIpuhJyn32yFZB+IfPkpjn9TTxnpRDbEjrTi1MQVhL6" crossorigin="anonymous"></script>
   </body>
 </html>
