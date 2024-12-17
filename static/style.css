@@ -24,14 +24,14 @@ body {
 .btn-primary {
     font-size: 20px;
     padding: 15px 30px;
-    background-color: #5865F2; 
+    background-color: #6c757d;
     border: none;
     border-radius: 50px;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
-    background-color: #4854c4; 
+    background-color:#5a6268 ;
     transform: scale(1.1);
 }
 

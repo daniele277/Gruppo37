@@ -11,6 +11,7 @@
   <body>
     <div class="container mt-3">
         <form action="/registrazione_IDP" class="row g-3" method="POST">
+
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <div class="alert alert-danger" role="alert">
@@ -27,14 +28,17 @@
                 <label for="inputSurname4" class="form-label">Surname</label>
                 <input type="text" name="surname" class="form-control" id="inputSurname4" required value="{{ request.form[surname] }}">
             </div>
+
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="inputEmail4" required value="{{ request.form[email] }}">
+                <input type="email" name="email" class="form-control" id="inputEmail4" value="{{ request.form['email'] if 'email' in request.form else '' }}" required>
             </div>
-            <div class="form-floating mb-3 col-md-6 position-relative">
-                <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Password" required>
-                <label for="inputPassword4">Password</label>
-                <button type="button" id="togglePassword" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 me-2 mt-2">Mostra</button>
+
+            <div class="col-md-6">
+                <label for="inputPassword4" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" name="password" class="form-control" id="inputPassword4" required>
+                </div>
             </div>
 
             <!-- Sezione criteri di validazione della password -->
@@ -78,13 +82,22 @@
     </div>
 
     <script>
-        // Aggiunta dello script per la gestione della visibilità della password e dei criteri
-        document.getElementById('togglePassword').addEventListener('click', function () {
-            const passwordField = document.getElementById('inputPassword4');
-            const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', passwordFieldType);
-            this.textContent = passwordFieldType === 'password' ? 'Mostra' : 'Nascondi';
-        });
+        // script per la gestione della visibilità della password e dei criteri
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordField = document.getElementById('inputPassword4');
+    const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', passwordFieldType);
+
+    // Cambia icona dinamicamente
+    const icon = document.getElementById('togglePasswordIcon');
+    if (passwordFieldType === 'password') {
+        icon.classList.remove('bi-eye-slash'); // Rimuove l'icona "occhio chiuso"
+        icon.classList.add('bi-eye'); // Aggiunge l'icona "occhio aperto"
+    } else {
+        icon.classList.remove('bi-eye'); // Rimuove l'icona "occhio aperto"
+        icon.classList.add('bi-eye-slash'); // Aggiunge l'icona "occhio chiuso"
+    }
+});
 
         document.getElementById('inputPassword4').addEventListener('input', function () {
             const password = this.value;

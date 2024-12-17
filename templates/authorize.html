@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <link rel="stylesheet" href="../static/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OAuth 2.0 Authorization</title>
+    <style>
+        /* Centra il contenuto e mantiene la disposizione verticale */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centra verticalmente */
+            align-items: center;     /* Centra orizzontalmente */
+            min-height: 100vh;       /* Assicura che il corpo occupi tutta l'altezza della finestra */
+            margin: 0;               /* Rimuove margini predefiniti */
+            background-color: #2c3e50; /* Sfondo grigio scuro per il corpo */
+            color: white;            /* Testo bianco */
+            font-family: Arial, sans-serif; /* Font */
+        }
+
+        h1 {
+            margin-bottom: 20px; /* Distanza sotto il titolo */
+        }
+
+        p {
+            margin-bottom: 20px; /* Distanza sotto il paragrafo */
+        }
+
+        button {
+            padding: 10px 20px; /* Spaziatura interna del pulsante */
+            background-color: #3498db; /* Colore del pulsante */
+            color: white;         /* Testo bianco nel pulsante */
+            border: none;         /* Rimuove i bordi */
+            border-radius: 5px;   /* Rende il pulsante con angoli arrotondati */
+            cursor: pointer;      /* Cambia il cursore quando si passa sopra il pulsante */
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Cambia colore quando il mouse passa sopra */
+        }
+    </style>
 </head>
 <body>
     <h1>Autenticazione con OAuth 2.0</h1>
     <p>Clicca sul pulsante qui sotto per autenticarti tramite il provider:</p>
 
-    <!-- Il link di autorizzazione generato dal server -->
-    <a href="/login_IDP" class="btn btn-primary">Accedi con OAuth</a>
-
-    <!-- Oppure, se hai un URL specifico, puoi scrivere direttamente: -->
-    <!--
-    <a href="https://provider.com/oauth/authorize?response_type=code&client_id=tuoClientID&redirect_uri=https%3A%2F%2FtuaApp.com%2Fcallback&scope=profile%20email&state=xyz123" class="btn btn-primary">
-        Accedi con OAuth
-    </a>
-    -->
+    <a href="/login_IDP" class="btn btn-primary">Accedi con Oauth</a>
 
 </body>
 </html>
