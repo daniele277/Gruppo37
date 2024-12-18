@@ -7,7 +7,7 @@ from flask import redirect, url_for
 import requests
 from datetime import datetime, timedelta
 
-from AccessToken import password, load_encrypted_private_key
+
 
 
 class Client:
@@ -49,24 +49,6 @@ def get_authorization_url(self):
 def get_token_url(self, code):
     return f"{self.tokenEndpoint}?grant_type=authorization_code&code={code}&redirect_uri={self.redirectURI}&client_id={self.clientID}&client_secret={self.clientSecret}"
 
-
-
-def refresh_token(self, refresh_token):
-    """
-    Usa il refresh token per ottenere un nuovo access token.
-    """
-    data = {
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token,
-        'client_id': self.clientID,
-        'client_secret': self.clientSecret,
-    }
-    response = requests.post(self.tokenEndpoint, data=data)
-    if response.status_code == 200:
-        token_info = response.json()
-        return token_info
-    else:
-        raise Exception(f"Errore nel refresh del token: {response.status_code} {response.text}")
 
 @staticmethod
 def getClientByID(clientID):

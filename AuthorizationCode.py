@@ -2,13 +2,16 @@ import secrets
 import sqlite3
 from datetime import datetime, timedelta
 
+#Questa classe gestisce il codice di autorizzazione emesso dall'Authorization Server
 
 class AuthorizationCode:
     def __init__(self, clientID, userID):
         self.code = secrets.token_urlsafe(16) #Genera un token casuale sicuro codificato in base64
         self.clientID = clientID
         self.userID = userID
-        self.tokenExpiryDate = datetime.utcnow() + timedelta(minutes=1)  # Scadenza in 1 minut0
+        self.tokenExpiryDate = datetime.utcnow() + timedelta(minutes=1)  # Scadenza in 1 minuto
+
+# Funzione che definisce il caricamento delle informazioni relative al code all'interno del DB
 
 def store_authorization_code(self):
     expires_at = datetime.utcnow() + timedelta(minutes=1)  # Codice valido per 1 minuto
@@ -29,14 +32,16 @@ def store_authorization_code(self):
     return None
 
 def generate_authorization_code(clientID, userID, ):
+
     code = AuthorizationCode(clientID, userID)
+
     store_authorization_code(code)
 
     return code
 
 def validate_authorization_code(code, clientID):
     try:
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect('database.db') as connection: #Ricerca all'interno del DB del code associato al client
             connection.row_factory = sqlite3.Row
             cursor = connection.cursor()
             cursor.execute('''SELECT * FROM AuthorizationCode WHERE code = ? AND clientID = ?
@@ -45,7 +50,7 @@ def validate_authorization_code(code, clientID):
 
             print(result)
 
-            if result and result['codeExpiryDate'] > datetime.utcnow():
+            if result and result['codeExpiryDate'] > datetime.utcnow(): #Check sulla scadenza del codice
                 return True
             else:
                 return False

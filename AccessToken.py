@@ -18,7 +18,8 @@ def generate_rsa_keypair():
         backend=default_backend()
     )
 
-# Estrai la chiave pubblica
+# Estrae la chiave pubblica
+
     public_key = private_key.public_key()
 
     return private_key, public_key
@@ -28,10 +29,11 @@ class AccessToken:
     pass
 
 def save_encrypted_private_key(private_key, filename, password):
-    """
-    Salva una chiave privata crittografata con una password.
-    """
+
+    #Salva una chiave privata crittografata con una password.
+
     # Usa BestAvailableEncryption per crittografare la chiave con una password
+
     encrypted_pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -39,12 +41,12 @@ def save_encrypted_private_key(private_key, filename, password):
         )
 
     with open(filename, 'wb') as f:
-        f.write(encrypted_pem)
+        f.write(encrypted_pem) #salvataggio della chiave all'interno del file
 
 def save_public_key(public_key, filename):
-    """
-    Salva la chiave pubblica in formato PEM su file.
-    """
+
+    #Salva la chiave pubblica in formato PEM su file.
+
     pem = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PublicFormat.SubjectPublicKeyInfo
@@ -53,9 +55,7 @@ def save_public_key(public_key, filename):
         f.write(pem)
 
 def load_encrypted_private_key(filename, password):
-    """
-    Carica una chiave privata crittografata da un file PEM.
-    """
+    # Funzione che definisce il caricamento della chiave privata dal file
     with open(filename, 'rb') as f:
         private_key = serialization.load_pem_private_key(
             f.read(),
@@ -66,9 +66,9 @@ def load_encrypted_private_key(filename, password):
 
 
 def load_public_key(filename):
-    """
-    Carica la chiave pubblica da un file PEM.
-    """
+
+# Caricamento della chiave pubblica associata alla chiave privata dal file
+
     with open(filename, "rb") as f:
         public_key = serialization.load_pem_public_key(
             f.read(),
@@ -77,25 +77,35 @@ def load_public_key(filename):
     return public_key
 
 password = 'prova'
+
 private_key_file = "encrypted_private_key.pem"
+
 public_key_file = "public_key.pem"
 
 # Controlla se le chiavi esistono già
 if not (os.path.exists(private_key_file) and os.path.exists(public_key_file)):
     # Genera e salva una nuova coppia di chiavi
     private_key, public_key = generate_rsa_keypair()
+
     save_encrypted_private_key(private_key, private_key_file, password)
+
     save_public_key(public_key, public_key_file)
 else:
     # Carica le chiavi già esistenti dai file
+
     private_key = load_encrypted_private_key(private_key_file, password)
+
     public_key = load_public_key(public_key_file)
 
 print("Chiave privata crittografata",private_key," e chiave pubblica", public_key)
 
 # Carica la chiave privata crittografata
+
 private_key_loaded = load_encrypted_private_key("encrypted_private_key.pem", password)
+
 print("Chiave privata caricata e decrittografata con successo.")
+
+#Funzione che genera un token univoco per ogni user esistente
 
 def generate_jwt(user_id,client_id, code):
 
@@ -104,6 +114,7 @@ def generate_jwt(user_id,client_id, code):
     if not code:
         raise ValueError("Il codice di autorizzazione non può essere vuoto.")
     payload = {
+
             'user_id': user.userID,
             'name': user.name,
             'email': user.email,
@@ -116,9 +127,9 @@ def generate_jwt(user_id,client_id, code):
     return token
 
 def validate_jwt(token, public_key):
-        """
-        Valida un JWT usando la chiave pubblica.
-        """
+
+        # Valida un JWT usando la chiave pubblica.
+
         try:
             decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
             print("Token valido:", decoded_token)

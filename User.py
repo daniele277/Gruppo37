@@ -1,5 +1,5 @@
 import sqlite3
-
+#Definizione della Classe User
 class User:
 
     _next_id = 1
@@ -19,6 +19,7 @@ class User:
 def printData(user):
     print(f"Dati ricevuti: {user.name}, {user.surname}, {user.email}, {user.hashPassword}, {user.address}, {user.city}, {user.state}, {user.zip}")
 
+# Funzione che permette l'inserimento dei dati dell'utente all'interno del nostro DB
 def insertUser(user):
         try:
             with sqlite3.connect('database.db') as connection:
@@ -35,7 +36,7 @@ def insertUser(user):
         except sqlite3.Error as e:
             return f"Errore nel database: {e}"
         return None
-
+#Funzione che verifica la presenza di un utente nel DB tramite la sua e-mail
 def find_user_by_email(email):
     try:
         with sqlite3.connect('database.db') as connection:
@@ -72,17 +73,23 @@ def find_user_by_email(email):
         print(f"Errore nel database: {e}")
         return f"Errore nel database: {e}"
 
+#Funzione che ricerca un utente presente nel DB tramite il suo ID, necessaria per associare il token relativo all'utente
+#in questione
 def find_user_by_id(user_id):
     try:
         with sqlite3.connect('database.db') as connection:
             cursor = connection.cursor()
 
-            # Cerca un utente che abbia la mail fornita
+            # Cerca un utente che abbia l'ID fornito
+
             cursor.execute('SELECT * FROM User WHERE userID = ?', (user_id,))
+
             user_data = cursor.fetchone()
 
             if user_data:
+
                 # Crea e restituisce un'istanza di User utilizzando i dati ottenuti
+
                 user = User(
                     name=user_data[1],
                     surname=user_data[2],
@@ -94,7 +101,9 @@ def find_user_by_id(user_id):
                     zip=user_data[8]
                 )
                 user.userID = user_data[0]  # Assegna l'userID recuperato
-                User._next_id = max(user.userID + 1, User._next_id)  # Gestisci l'incremento di ID
+
+                User._next_id = max(user.userID + 1, User._next_id)  # Gestisce l'incremento di ID
+
                 return user
             else:
                 print("Nessun utente trovato con questo id.")

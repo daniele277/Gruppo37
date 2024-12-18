@@ -1,10 +1,12 @@
 import re #Gestione delle regular expression nelle condizioni di inserimento della password
 import string
 import random
+import datetime
 import requests
 from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import bcrypt
 from flask_mail import Mail, Message
+import pyotp
 from AccessToken import generate_jwt
 from User import User, printData, insertUser, find_user_by_email
 from AuthorizationCode import generate_authorization_code, validate_authorization_code
@@ -13,28 +15,41 @@ app = Flask(__name__)
 
 app.secret_key = 'chiave_segreta_per_la_sessione'
 
+#Configurazione dell'app per l'invio della mail relativa alla 2FA
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False  # Deve essere False se stai usando TLS
-app.config['MAIL_USERNAME'] = 'idiot.proof44@gmail.com'  # Sostituisci con la tua email
-app.config['MAIL_PASSWORD'] = 'fuxs jeab hayh gwlq'  # Sostituisci con la tua password o una password app-specifica
+app.config['MAIL_USERNAME'] = 'idiot.proof44@gmail.com'
+app.config['MAIL_PASSWORD'] = 'fuxs jeab hayh gwlq'
 
 mail = Mail(app)
 
+# Funzione che genera una OTP con scadenza di 1 minuto
 def generate_otp():
-    return ''.join(random.choices(string.digits, k=6))
+
+    otp = ''.join(random.choices(string.digits, k=6))
+
+    session['otp_expiry'] = datetime.datetime.now() + datetime.timedelta(minutes=1)
+
+    return otp
 
 # Funzione per inviare OTP via email
 def send_otp_email(user_email, otp):
-    print(user_email)
+
     msg = Message("Il tuo OTP per l'autenticazione 2FA", sender="idiot.proof44@gmail.com", recipients=[user_email])
+
     msg.body = f"Il tuo codice OTP è: {otp}"
+
     try:
         mail.send(msg)
+
         print("OTP inviato via email!")
+
     except Exception as e:
+
         print(f"Errore nell'invio dell'email: {e}")
+
+# Definizione delle rotte dell'app principale
 @app.route('/')
 def index():
     return render_template('homepage_IDP.html')
@@ -70,6 +85,7 @@ def registrazione_IDP():
 
 @app.route('/registrazione_completata')
 def registrazione_completata():
+
     return render_template('registrazione_completata.html')
 
 @app.route('/authorize')
@@ -111,19 +127,25 @@ def login_IDP():
 
         if user is not None and bcrypt.checkpw(password, user.hashPassword):
             print('utente trovato')
+
             # Se l'utente esiste e la password è corretta
-            session['user_id'] = user.userID # Salva l'ID dell'utente nella sessione
+
+            session['user_id'] = user.userID  # Salva l'ID dell'utente nella sessione
+
             otp = generate_otp()
+            send_otp_email(email, otp)
             session['otp'] = otp
-            send_otp_email(email,otp)
 
             return redirect(url_for('verifica_otp'))  # Reindirizza all'autorizzazione
+
 
         else:
             print('Email o password errati. Riprova.')
             flash('Email o password errati. Riprova.')
 
-    return render_template('login_IDP.html')
+
+    return render_template('login_IDP.html') #reindirizzamento alla pagina login
+
 
 @app.route('/verifica_otp', methods=['GET', 'POST'])
 def verifica_otp():
@@ -134,19 +156,26 @@ def verifica_otp():
         print('otp: ',otp)
 
         if otp == session.get('otp'):
+
             return redirect(url_for('autorizza'))
+
         else:
+
             return redirect(url_for('login_IDP'))
 
     return render_template('verifica_otp.html')
 @app.route('/autorizza')
 def autorizza():
+
     code = generate_authorization_code(session.get('client_id'),session.get('user_id'))
+
     callback_url = f"{session.get('redirect_uri')}?code={code.code}&state={session.get('state')}"
+
     return render_template('autorizza.html',callback_url=callback_url)
 
 @app.route('/privacy')
 def privacy():
+
     return render_template('privacy.html')
 
 @app.route('/token')
@@ -171,6 +200,7 @@ def token():
             data=response.json()
 
             return data
+
         except ValueError:
 
             print("Decodifica JSON fallita")
@@ -178,14 +208,9 @@ def token():
             return response.text
 
     else:
+
         return jsonify({"Errore": f"Errore {response.status_code}: {response.text}"}), response.status_code
 
-
-
-   # accesso_url = (f"{'http://localhost:5001/accesso_risorsa'}?token={access_token}&user_id={session.get('user_id')}" )
-
-    #return redirect(accesso_url)
-
-
+# Avvio del server flask locale ( 0.0.0.0) in ascolto sulla porta 5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

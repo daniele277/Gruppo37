@@ -1,4 +1,5 @@
 import sqlite3
+# Classe che consente la connessione al nostro DB
 
 connection = sqlite3.connect('database.db')
 
