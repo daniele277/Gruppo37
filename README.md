@@ -1,4 +1,5 @@
 IDiot-Proof
+
 L'obiettivo del progetto è creare un identity provider che gestisca l'autenticazione di diversi utenti, a diversi client web. Per semplicità abbiamo definito un unico client web di simulazione. 
 
 Ogni utente che vuole accedere alla propria area riservata del sito, deve prima registrarsi all'identity provider Idiot-Proof.
