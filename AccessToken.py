@@ -1,8 +1,6 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives.hashes import SHA256
 import os
 import jwt
 
@@ -11,14 +9,14 @@ from User import find_user_by_id
 
 def generate_rsa_keypair():
 
-# Genera la chiave privata RSA
+# Generazione della chiave privata RSA
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048,  # Dimensione della chiave in bit
         backend=default_backend()
     )
 
-# Estrae la chiave pubblica
+# Estrazione della chiave pubblica
 
     public_key = private_key.public_key()
 
@@ -30,7 +28,7 @@ class AccessToken:
 
 def save_encrypted_private_key(private_key, filename, password):
 
-    #Salva una chiave privata crittografata con una password.
+    # Salva una chiave privata crittografata con una password.
 
     # Usa BestAvailableEncryption per crittografare la chiave con una password
 
@@ -45,7 +43,7 @@ def save_encrypted_private_key(private_key, filename, password):
 
 def save_public_key(public_key, filename):
 
-    #Salva la chiave pubblica in formato PEM su file.
+    # Salva la chiave pubblica in formato PEM su file.
 
     pem = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
@@ -55,7 +53,7 @@ def save_public_key(public_key, filename):
         f.write(pem)
 
 def load_encrypted_private_key(filename, password):
-    # Funzione che definisce il caricamento della chiave privata dal file
+    # Caricamento della chiave privata dal file
     with open(filename, 'rb') as f:
         private_key = serialization.load_pem_private_key(
             f.read(),
@@ -86,15 +84,11 @@ public_key_file = "public_key.pem"
 if not (os.path.exists(private_key_file) and os.path.exists(public_key_file)):
     # Genera e salva una nuova coppia di chiavi
     private_key, public_key = generate_rsa_keypair()
-
     save_encrypted_private_key(private_key, private_key_file, password)
-
     save_public_key(public_key, public_key_file)
 else:
     # Carica le chiavi già esistenti dai file
-
     private_key = load_encrypted_private_key(private_key_file, password)
-
     public_key = load_public_key(public_key_file)
 
 print("Chiave privata crittografata",private_key," e chiave pubblica", public_key)
@@ -105,7 +99,7 @@ private_key_loaded = load_encrypted_private_key("encrypted_private_key.pem", pas
 
 print("Chiave privata caricata e decrittografata con successo.")
 
-#Funzione che genera un token univoco per ogni user esistente
+#Generazione di un token JWT
 
 def generate_jwt(user_id,client_id, code):
 

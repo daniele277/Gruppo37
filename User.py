@@ -1,5 +1,5 @@
 import sqlite3
-#Definizione della Classe User
+
 class User:
 
     _next_id = 1

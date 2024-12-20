@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 app.secret_key = 'chiave_segreta_per_la_sessione'
 
-#Configurazione dell'app per l'invio della mail relativa alla 2FA
+# Configurazione dell'app per l'invio della mail relativa alla 2FA
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -23,15 +23,23 @@ app.config['MAIL_PASSWORD'] = 'fuxs jeab hayh gwlq'
 
 mail = Mail(app)
 
-# Funzione che genera una OTP con scadenza di 1 minuto
+# Validazione dei criteri di inserimento passsword
+def validate_password(password):
+    if (len(password) < 8 or
+            not re.search(r"[A-Z]", password) or
+            not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)):
+        return False
+    return True
+
+# Generazione OTP con scadenza di 15 secondi
 def generate_otp():
 
     otp = ''.join(random.choices(string.digits, k=6))
-    expiry_time = datetime.datetime.now().astimezone() + datetime.timedelta(seconds=10)
+    expiry_time = datetime.datetime.now().astimezone() + datetime.timedelta(seconds=15)
     session['otp_expiry'] = expiry_time
     return otp
 
-# Funzione per inviare OTP via email
+# Invio OTP via email
 def send_otp_email(user_email, otp):
 
     msg = Message("Il tuo OTP per l'autenticazione 2FA", sender="idiot.proof44@gmail.com", recipients=[user_email])
@@ -96,13 +104,6 @@ def authorize(): #dopo il tasto "accesso riservato con IDP"
 
     return render_template('authorize.html')
 
-def validate_password(password):
-    if (len(password) < 8 or
-            not re.search(r"[A-Z]", password) or
-            not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)):
-        return False
-    return True
-
 @app.route('/login_IDP', methods=['GET', 'POST'])
 def login_IDP():
     if request.method == 'POST':
@@ -127,38 +128,40 @@ def login_IDP():
             print('utente trovato')
 
             # Se l'utente esiste e la password è corretta
-
             session['user_id'] = user.userID  # Salva l'ID dell'utente nella sessione
-
             otp = generate_otp()
             send_otp_email(email, otp)
             session['otp'] = otp
 
             return redirect(url_for('verifica_otp'))  # Reindirizza all'autorizzazione
-
-
         else:
             print('Email o password errati. Riprova.')
             flash('Email o password errati. Riprova.')
-
 
     return render_template('login_IDP.html') #reindirizzamento alla pagina login
 
 
 @app.route('/verifica_otp', methods=['GET', 'POST'])
 def verifica_otp():
-
     if request.method == 'POST':
-
         otp = request.form['otp']
-        print('otp: ',otp)
+        print('otp: ', otp)
 
-        if otp == session.get('otp') and datetime.datetime.now().astimezone() < session.get('otp_expiry'):
-            return redirect(url_for('autorizza'))
+        # Controlla se l'OTP è scaduto
+        if datetime.datetime.now().astimezone() >= session.get('otp_expiry'):
+            flash('OTP scaduto. Si prega di ripetere il login per ricevere un nuovo codice.', 'danger')
+            return redirect(url_for('login_IDP'))  # Reindirizza alla pagina di login
+
+        # Controlla se l'OTP inserito è corretto
+        if otp == session.get('otp'):
+            return redirect(url_for('autorizza'))  # Reindirizza alla pagina autorizzazione
         else:
-            return redirect(url_for('login_IDP'))
+            flash('OTP non valido. Riprova.', 'warning')  # Messaggio di errore
+            return redirect(url_for('verifica_otp'))  # Ricarica la pagina per riprovare
 
-    return render_template('verifica_otp.html')
+    return render_template('verifica_otp.html')  # Mostra la pagina di verifica OTP
+
+
 
 @app.route('/autorizza')
 def autorizza():

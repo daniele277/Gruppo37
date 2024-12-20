@@ -1,14 +1,4 @@
 import sqlite3
-from urllib.parse import urlencode
-import jwt
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-from flask import redirect, url_for
-import requests
-from datetime import datetime, timedelta
-
-
-
 
 class Client:
 

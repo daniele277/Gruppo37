@@ -1,8 +1,6 @@
-from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
-import requests
+from flask import Flask, request, redirect, render_template, jsonify
 
-from AccessToken import validate_jwt, public_key, AccessToken
-from AuthorizationCode import validate_authorization_code
+from AccessToken import validate_jwt, public_key
 from Client import Client, get_authorization_url, insertClient
 
 app = Flask(__name__)
@@ -24,7 +22,8 @@ def index():
 
     return render_template('homepage_sito.html',authorization_url=authorization_url)
 
-@app.route('/callback') # rotta che viene dopo il tasto autorizza presente nell'authorization URL
+# rotta che viene dopo il tasto autorizza presente nell'authorization URL
+@app.route('/callback')
 def callback():
     code = request.args.get('code')
 
@@ -37,7 +36,8 @@ def callback():
         return redirect(token_url)
     return "Errore: codice di autorizzazione non trovato", 400
 
-@app.route('/accesso_risorsa') #Definisce la rotta per accedere alla risorsa protetta all'interno del sito
+#Definisce la rotta per accedere alla risorsa protetta all'interno del sito
+@app.route('/accesso_risorsa')
 def accesso_risorsa():
 
     auth_header = request.headers.get('Authorization') #acquisizione dell'headers del token
@@ -57,6 +57,5 @@ def modifica_profilo():
     return render_template('modifica_profilo.html')
 
 # Avvio del server flask locale ( 0.0.0.0) in ascolto sulla porta 5001
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
