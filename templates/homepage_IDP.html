@@ -8,37 +8,72 @@
     <link rel="stylesheet" href="../static/style.css">
   </head>
 
-
   <body>
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="http://127.0.0.1:5000/">IDiotProof</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Chi siamo</a></li>
-            <li><a class="dropdown-item" href="#">Il progetto</a></li>
-          </ul>
-        </li>
-      </ul>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://127.0.0.1:5000/"><span style="color: red;">ID</span>iot-<span style="color: red;">P</span>roof</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Menu
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Chi siamo</a></li>
+              <li><a class="dropdown-item" href="#">Il progetto</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <div class="d-flex justify-content-center align-items-center flex-column" style="height: auto;">
+    <h2 class="text center mb-4 text-center"> Benvenuto all'interno dell'homepage di <span style="color: red;">ID</span>iot-<span style="color: red;">P</span>roof! </h2>
+
+    <!-- Container delle box -->
+    <div class="container mt-1">
+      <div class="row d-flex align-items-stretch">
+        <!-- Box Sinistra -->
+        <div class="col-md-6">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <h2 class="text-center mb-4">Chi siamo</h2>
+            <p class="text-justify">
+              Siamo un gruppo di lavoro formato da 4 studenti:</p>
+            <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+              <li>Michele Gazzilli</li>
+              <li>Matteo Miracapillo</li>
+              <li>Antonio Mario Miale</li>
+              <li>Daniele Trisorio</li>
+            </ul>
+            <p class="text-justify">
+              Per la prima volta ci siamo approcciati ad un progetto di cyber-security.
+              Partendo da tante incertezze, siamo riusciti grazie allo studio a realizzare un prototipo di Identity Provider che utilizzi il protocollo OAuth 2.0 per gestire l'autenticazione di diversi utenti ad un client web.
+            </p>
+          </div>
+        </div>
+        <!-- Box Destra -->
+        <div class="col-md-6">
+          <div class="d-flex align-items-center justify-content-center p-4 border rounded shadow-sm h-100">
+            <div>
+              <h2 class="text-center mb-4">Il progetto</h2>
+              <p class="text-justify">
+                <span style="color: red;">ID</span>iot-<span style="color: red;">P</span>roof è un progetto finalizzato a creare un Identity Provider sicuro, scalabile e facile da integrare con le applicazioni esistenti.
+                Per la creazione del prototipo, abbiamo simulato l'accesso ad un generico client web, permettendo la visualizzazione di un'area riservata per ogni utente autenticato tramite il nostro provider.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/registrazione_IDP" class="btn btn-primary mt-4" tabindex="-1" role="button" aria-disabled="true"> Registrati ad <span style="color: red;">ID</span>iot-<span style="color: red;">P</span>roof</a>
   </div>
-</nav>
 
-<div class="d-flex justify-content-center align-items-center flex-column" style="height: 80vh;">
-
-    <p class="text center mb-4">Benvenuto all'interno dell'homepage di IDiotProof, cliccando il bottone qui sotto potrai iscriverti al nostro provider.</p>
-
-  <a href="/registrazione_IDP" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true"> Registrati ad IDiotProof</a>
-</div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

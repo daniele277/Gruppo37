@@ -6,7 +6,6 @@ import requests
 from flask import Flask, request, redirect, url_for, render_template, session, flash, jsonify
 import bcrypt
 from flask_mail import Mail, Message
-import pyotp
 from AccessToken import generate_jwt
 from User import User, printData, insertUser, find_user_by_email
 from AuthorizationCode import generate_authorization_code, validate_authorization_code
@@ -28,9 +27,8 @@ mail = Mail(app)
 def generate_otp():
 
     otp = ''.join(random.choices(string.digits, k=6))
-
-    session['otp_expiry'] = datetime.datetime.now() + datetime.timedelta(minutes=1)
-
+    expiry_time = datetime.datetime.now().astimezone() + datetime.timedelta(seconds=10)
+    session['otp_expiry'] = expiry_time
     return otp
 
 # Funzione per inviare OTP via email
@@ -155,15 +153,13 @@ def verifica_otp():
         otp = request.form['otp']
         print('otp: ',otp)
 
-        if otp == session.get('otp'):
-
+        if otp == session.get('otp') and datetime.datetime.now().astimezone() < session.get('otp_expiry'):
             return redirect(url_for('autorizza'))
-
         else:
-
             return redirect(url_for('login_IDP'))
 
     return render_template('verifica_otp.html')
+
 @app.route('/autorizza')
 def autorizza():
 

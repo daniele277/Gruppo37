@@ -117,9 +117,13 @@ def generate_jwt(user_id,client_id, code):
 
             'user_id': user.userID,
             'name': user.name,
+            'surname':user.surname,
             'email': user.email,
             'client_id': client_id,
-             'code': code
+            'code': code,
+            'address': user.address,
+            'city': user.city,
+            'state': user.state
     }
 
     token = jwt.encode(payload, private_key_loaded , algorithm='RS256')

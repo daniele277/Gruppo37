@@ -35,7 +35,38 @@
         <h1>Benvenuto nell'Area Riservata</h1>
 
         <p class="lead">Ciao, <strong>{{ user_name }}</strong>! Hai eseguito correttamente l'accesso tramite IDiotProof</p>
+        <p> L'email con cui hai effettuato l'accesso è: <strong>{{ email }}</strong></p>
 
+      </div>
+    </div>
+
+    <div class="container mt-4">
+      <div class="text-white col-md-6 mx-auto p-4 border rounded shadow-sm">
+        <h4 class="text-center mb-4">Profilo Utente</h4>
+        <div class="mb-2">
+          <label class="fw-bold">Nome:</label>
+          <p class="text-white">{{ user_name }}</p>
+        </div>
+        <div class="mb-2">
+          <label class="fw-bold">Cognome:</label>
+          <p class="text-white">{{ surname }}</p>
+        </div>
+        <div class="mb-2">
+          <label class="fw-bold">Email:</label>
+          <p class="text-white">{{ email }}</p>
+        </div>
+        <div class="mb-2">
+          <label class="fw-bold">Stato:</label>
+          <p class="text-white">{{ state }}</p>
+        </div>
+        <div class="mb-2">
+          <label class="fw-bold">Città:</label>
+          <p class="text-white">{{ city }}</p>
+        </div>
+        <div>
+          <label class="fw-bold">Indirizzo:</label>
+          <p class="text-white">{{ address }}</p>
+        </div>
       </div>
     </div>
 

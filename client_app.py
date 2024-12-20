@@ -50,7 +50,7 @@ def accesso_risorsa():
     payload = validate_jwt(jwt_token, public_key) #tramite la funzione validate_jwt andiamo a decodificare il token ed ad estrarre il payload
     print(payload)
 
-    return render_template('accesso_risorsa.html',user_name=payload.get('name'),email=payload.get('email'))
+    return render_template('accesso_risorsa.html',user_name=payload.get('name'),email=payload.get('email'), surname=payload.get('surname'), address=payload.get('address'), city=payload.get('city'), state=payload.get('state'))
 
 @app.route('/modifica_profilo')
 def modifica_profilo():

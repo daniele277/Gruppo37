@@ -8,97 +8,95 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 
-<body>
-<div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          {% for message in messages %}
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+<body class="d-flex justify-content-center align-items-center vh-100 ">
+    <!-- Contenitore del Login -->
+    <div class="container  p-4 shadow rounded" style="max-width: 400px;">
 
-    <form action="/login_IDP" class="row g-3" method="POST">
-        <div class="form-floating mb-3">
-            <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ request.form['email'] }}">
-            <label for="floatingInput">Email address</label>
-        </div>
-        <div class="form-floating mb-3 position-relative">
-            <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-            <button type="button" id="togglePassword" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 me-2 mt-2">Mostra</button>
-        </div>
+        <!-- Area messaggi -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-        <div id="password-criteria" class="mb-3">
-            <p>Criteri per la password:</p>
-            <ul>
-                <li id="min-length" class="text-danger">Almeno 8 caratteri <span class="check-icon"></span></li>
-                <li id="uppercase" class="text-danger">Almeno una lettera maiuscola <span class="check-icon"></span></li>
-                <li id="special-char" class="text-danger">Almeno un carattere speciale <span class="check-icon"></span></li>
-            </ul>
-        </div>
+        <!-- Modulo di Login -->
+        <form action="/login_IDP" method="POST">
+            <div class="form-floating mb-3">
+                <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ request.form['email'] }}">
+                <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3 position-relative">
+                <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Log In</button>
+            <!-- Criteri per la password -->
+            <div id="password-criteria" class="mb-3">
+                <p>Criteri per la password:</p>
+                <ul>
+                    <li id="min-length" class="text-danger">Almeno 8 caratteri <span class="check-icon"></span></li>
+                    <li id="uppercase" class="text-danger">Almeno una lettera maiuscola <span class="check-icon"></span></li>
+                    <li id="special-char" class="text-danger">Almeno un carattere speciale <span class="check-icon"></span></li>
+                </ul>
+            </div>
 
-        <!-- Button for registration -->
-        <div class="mt-3">
-            <p>Non hai un account?<a href="/register" class="btn btn-link">Registrati</a></p>
-        </div>
-    </form>
-</div>
+            <!-- Pulsanti -->
+            <button type="submit" class="btn btn-primary w-100">Log In</button>
 
-<script>
-    document.getElementById('togglePassword').addEventListener('click', function () {
-        const passwordField = document.getElementById('floatingPassword');
-        const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', passwordFieldType);
-        this.textContent = passwordFieldType === 'password' ? 'Mostra' : 'Nascondi';
-    });
+            <!-- Link Registrazione -->
+            <div class="mt-3 text-center">
+                <p>Non hai un account? <a href="/registrazione_IDP" class="btn btn-link">Registrati</a></p>
+            </div>
+        </form>
+    </div>
 
-    document.getElementById('floatingPassword').addEventListener('input', function () {
-        const password = this.value;
-        const minLength = document.getElementById('min-length');
-        const uppercase = document.getElementById('uppercase');
-        const specialChar = document.getElementById('special-char');
-        const checkIconHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
+    <!-- Script del controllo della password -->
+    <script>
+        document.getElementById('floatingPassword').addEventListener('input', function () {
+            const password = this.value;
+            const minLength = document.getElementById('min-length');
+            const uppercase = document.getElementById('uppercase');
+            const specialChar = document.getElementById('special-char');
+            const checkIconHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
 
-        if (password.length >= 8) {
-            minLength.classList.remove('text-danger');
-            minLength.classList.add('text-success');
-            minLength.querySelector('.check-icon').innerHTML = checkIconHTML;
-        } else {
-            minLength.classList.remove('text-success');
-            minLength.classList.add('text-danger');
-            minLength.querySelector('.check-icon').innerHTML = '';
-        }
+            if (password.length >= 8) {
+                minLength.classList.remove('text-danger');
+                minLength.classList.add('text-success');
+                minLength.querySelector('.check-icon').innerHTML = checkIconHTML;
+            } else {
+                minLength.classList.remove('text-success');
+                minLength.classList.add('text-danger');
+                minLength.querySelector('.check-icon').innerHTML = '';
+            }
 
-        if (/[A-Z]/.test(password)) {
-            uppercase.classList.remove('text-danger');
-            uppercase.classList.add('text-success');
-            uppercase.querySelector('.check-icon').innerHTML = checkIconHTML;
-        } else {
-            uppercase.classList.remove('text-success');
-            uppercase.classList.add('text-danger');
-            uppercase.querySelector('.check-icon').innerHTML = '';
-        }
+            if (/[A-Z]/.test(password)) {
+                uppercase.classList.remove('text-danger');
+                uppercase.classList.add('text-success');
+                uppercase.querySelector('.check-icon').innerHTML = checkIconHTML;
+            } else {
+                uppercase.classList.remove('text-success');
+                uppercase.classList.add('text-danger');
+                uppercase.querySelector('.check-icon').innerHTML = '';
+            }
 
-        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            specialChar.classList.remove('text-danger');
-            specialChar.classList.add('text-success');
-            specialChar.querySelector('.check-icon').innerHTML = checkIconHTML;
-        } else {
-            specialChar.classList.remove('text-success');
-            specialChar.classList.add('text-danger');
-            specialChar.querySelector('.check-icon').innerHTML = '';
-        }
-    });
-</script>
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                specialChar.classList.remove('text-danger');
+                specialChar.classList.add('text-success');
+                specialChar.querySelector('.check-icon').innerHTML = checkIconHTML;
+            } else {
+                specialChar.classList.remove('text-success');
+                specialChar.classList.add('text-danger');
+                specialChar.querySelector('.check-icon').innerHTML = '';
+            }
+        });
+    </script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
