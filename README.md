@@ -1,11 +1,11 @@
-L'obiettivo del progetto è creare un identity provider che gestisca l'autenticazione di diversi utenti, a diversi client web. Per semplicità abbiamo definito un unico client web chiamato "sitoQualsiasi". 
+IDiot-Proof
+L'obiettivo del progetto è creare un identity provider che gestisca l'autenticazione di diversi utenti, a diversi client web. Per semplicità abbiamo definito un unico client web di simulazione. 
 
-Ogni utente che vuole accedere alla propria area riservata del "sitoQualsiasi", deve prima registrarsi all'identity provider.
+Ogni utente che vuole accedere alla propria area riservata del sito, deve prima registrarsi all'identity provider Idiot-Proof.
 
 L'intera applicazione parte con la visualizzazione dell'homepage IDP, in cui c'è un link per la registrazione dell'utente.
-Dopo la registrazione dell'utente, l'applicazione fornisce una pagina in cui l'utente può scegliere se tornare alla homepage oppure provare ad autenticarsi al "sitoQualsiasi" mediante l'identity provider sul quale si è appena registrato.
+Dopo la registrazione, l'applicazione reindirizza l'utente alla homepage di IDiot-Proof e l'utente può autenticarsi al sito di simulazione mediante IDiot-Proof.
 
-Quindi con quest'ultimo link l'utente visualizza l'homepage del "sitoQualsiasi", in cui c'è un ilnk che permette di iniziare l'autenticazione mediante l'identity provider.
+Avviando l'applicazione web, l'utente visualizza l'homepage del sito di simulazione, in cui c'è un link per iniziare l'autenticazione con IDiot-Proof.
 
 Con quest'ultimo inizia il protocollo "Authorization Code Flow", previsto da OAuth 2.0. 
-
